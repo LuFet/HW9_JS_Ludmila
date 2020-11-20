@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        input.invalid {
+            background-color: Pink;
+        }
+
+        input.valid {
+            background-color: LightGreen;
+        }
+    </style>
+</head>
+<body>    
+    <!-- Задание 1
+    Разработайте страницу с двумя полями ввода и кнопкой. Пользователь должен вводить в поля вводов
+    целочисленный значения, а нажатие по кнопке должно приводить к асинхронному запросу на сервер.
+    Запрашивать следует обработчик CalcHandler.ashx, который находиться вместе с примерами в уроке 
+    номер 10, обработчик принимает два post параметра с именами ‘a’ и ‘b'. Результат, который возвращает pattern="/[0-9]|\./
+    обработчик выведите на страницу. -->
+    
+<form name="form1" id="myForm">
+    <input type="text" id="myInp1">
+    <input type="text" id="myInp2">
+    <input id="buttonGet" type="button" value="Get Data">    
+</form>
+<hr>
+    <p id="output">default</p>
+<script>
+window.onload = function () { 
+    let a=0;
+    let b=0;
+    document.getElementById("myInp1").onclick = function () {
+        let pattern = /[0-9]|\./;
+        validate(this, pattern);       
+        a=this.value;
+        console.log(a);
+    }
+    document.getElementById("myInp2").onclick = function () {
+        let pattern = /[0-9]|\./;
+        validate(this, pattern);
+        b=this.value;
+        console.log(b);       
+    }
+    function validate(elem, pattern) {
+        let res = elem.value.search(pattern);
+        if (res == -1) elem.className = "invalid"; // установка CSS класса 
+        else elem.className = "valid";
+    }    
+    document.getElementById("buttonGet").onclick = function () {
+        let invalid = false;
+        for (let i = 0; i < form1.elements.length; ++i) {
+            let e = form1.elements[i];
+            // проверка типа элемента и наличия обработчика события onchange.
+            if (e.type == "text" && e.onchange) {
+                e.onchange(); // запуск события onchange
+                if (e.className == "invalid") invalid = true;
+            }
+        }
+        if (invalid) {
+            alert("Допущены ошибки при заполнении формы.");
+            return false; // отмена отправки формы.
+        }
+        else
+        {
+            console.log(a);
+            console.log(b);
+            let xhr = new XMLHttpRequest();            
+            xhr.open("GET", "CalcHandler.ashx?a=5&b=6");
+            xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                document.getElementById("output").innerHTML = xhr.responseText;
+            }
+        }
+
+        xhr.send();
+        }    
+    }
+}
+</script>
+</body>
+</html>

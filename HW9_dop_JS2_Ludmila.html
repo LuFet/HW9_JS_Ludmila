@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Дополнительное задание
+Создайте две HTML страницы с разным контентом. Создайте страницу, в которой 
+находиться сценарий загружающий и отображающий контент двух страниц при 
+нажатии на кнопку. Контент должен загружаться асинхронно. -->
+<script>
+    window.onload = function () {
+
+        document.getElementById("btnGet").onclick = function () {
+
+            let xhr = new XMLHttpRequest();  
+            let xhr2 = new XMLHttpRequest();  
+            console.log(xhr);        // Создание объекта для HTTP запроса.
+            console.log(xhr.readyState);
+            xhr.open("GET", "testfile1.html", true);  // Настройка объекта для отправки асинхронного GET запроса
+            console.log(xhr.readyState);
+            xhr.onreadystatechange = function () {
+                console.log(xhr.readyState);
+                if (xhr.readyState == 4) { // если получен ответ
+                    if (xhr.status == 200) { // и если статус код ответа 200
+                        document.getElementById("output").innerHTML += xhr.responseText; // responseText - текст ответа полученного с сервера.
+                    }
+                }
+            }
+            xhr.send();
+
+            xhr2.open("GET", "testfile2.html", true);  // Настройка объекта для отправки асинхронного GET запроса
+            
+            console.log(xhr2);        // Создание объекта для HTTP запроса.
+            console.log(xhr2.readyState);
+            xhr2.open("GET", "testfile2.html", true);  // Настройка объекта для отправки асинхронного GET запроса
+            console.log(xhr2.readyState);
+            xhr2.onreadystatechange = function () {
+                 console.log(xhr2.readyState);
+                 if (xhr2.readyState == 4) { // если получен ответ
+                     if (xhr2.status == 200) { // и если статус код ответа 200
+                         document.getElementById("output").innerHTML += xhr2.responseText; // responseText - текст ответа полученного с сервера.
+                     }
+                 }
+             }
+            
+             xhr2.send();                              // Отправка запроса, так как запрос асинхронный сценарий продолжит свое выполнение. Когда с сервера придет ответ сработает событие onreadystatechange
+             // code
+        }     
+    }      
+</script>
+<input id="btnGet" type="button" value="Get Info" />
+<p id="output"></p>
+</body>
+</html>
